@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSS Minifier & Beautifier</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    textarea { width: 100%; min-height: 150px; font-family: monospace; margin-bottom: 12px; }
+    button { margin: 0 8px 8px 0; padding: 6px 18px; }
+    .result { background: #f7f7f7; border: 1px solid #ccc; padding: 10px; margin-top: 10px; white-space: pre-wrap; }
+    .label { font-weight: bold; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>CSS Minifier & Beautifier</h1>
+  <label for="inputCSS" class="label">Paste your CSS here:</label>
+  <textarea id="inputCSS" placeholder="Paste or write CSS code here..."></textarea>
+  <div>
+    <button onclick="minify()">Minify CSS</button>
+    <button onclick="beautify()">Beautify CSS</button>
+    <button onclick="clearAll()">Clear</button>
+  </div>
+  <label class="label">Result:</label>
+  <div class="result" id="outputCSS"></div>
+
+  <script>
+    // Minifier function (same logic as cssMinifier.js)
+    function minifyCSS(css) {
+      css = css.replace(/\/\*[\s\S]*?\*\//g, '');
+      css = css.replace(/\s*([\{\}:;,\.\)\]])\s*/g, '$1');
+      css = css.replace(/;\s*}/g, '}');
+      css = css.replace(/\s+/g, ' ');
+      return css.trim();
+    }
+
+    // Beautifier function (same logic as cssBeautifier.js)
+    function beautifyCSS(css) {
+      css = css.replace(/}/g, '}\n');
+      css = css.replace(/{/g, '{\n');
+      css = css.replace(/;/g, ';\n');
+      let indent = 0;
+      return css.split('\n').map(line => {
+        line = line.trim();
+        if (line.endsWith('}')) indent--;
+        let indented = '  '.repeat(Math.max(indent, 0)) + line;
+        if (line.endsWith('{')) indent++;
+        return indented;
+      }).join('\n').replace(/\n\s*\n/g, '\n');
+    }
+
+    function minify() {
+      const input = document.getElementById('inputCSS').value;
+      document.getElementById('outputCSS').textContent = minifyCSS(input);
+    }
+    function beautify() {
+      const input = document.getElementById('inputCSS').value;
+      document.getElementById('outputCSS').textContent = beautifyCSS(input);
+    }
+    function clearAll() {
+      document.getElementById('inputCSS').value = '';
+      document.getElementById('outputCSS').textContent = '';
+    }
+  </script>
+</body>
+</html>
